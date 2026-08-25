@@ -17,3 +17,57 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Drivers {
+  id Int  @id @default(autoincrement())
+  name String?
+  active Boolean
+  vehicles Vehicles[]
+  trips Trips[]
+}
+
+model Vehicles {
+  id Int  @id @default(autoincrement())
+  driverId Int 
+  driver Drivers  @relation(fields: [driverId], references: [id])
+  make String?
+  model String?
+  year Int?
+  licensePlate String? @unique
+  trips Trips[]
+}
+
+model Trips {
+  id Int  @id @default(autoincrement())
+  driverId Int
+  driver Drivers  @relation(fields: [driverId], references: [id])
+  vehicleId Int
+  vehicle Vehicles @relation(fields: [vehicleId], references: [id])
+  startTime DateTime
+  endTime DateTime?
+  locations Locations[]
+  anomalies Anomalies[]
+}
+
+model Locations {
+  id Int  @id @default(autoincrement())
+  tripId Int
+  trip Trips  @relation(fields: [tripId], references: [id])
+  timestamp DateTime
+  latitude Float
+  longitude Float
+  speed Float?
+  heading Float?
+  anomalies Anomalies[]
+}
+
+model Anomalies {
+  id Int  @id @default(autoincrement())
+  tripId Int
+  trip Trips @relation(fields: [tripId], references: [id])
+  locationId Int?
+  location Locations?   @relation(fields: [locationId], references: [id])
+  type String
+  detectedAt DateTime @default(now())
+  details String?
+}
