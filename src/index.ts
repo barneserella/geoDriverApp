@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express, { type Request, type Response } from 'express';
-import { prisma } from './db.js';
+import { prisma } from './config/db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
